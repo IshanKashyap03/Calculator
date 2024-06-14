@@ -1,53 +1,18 @@
-// const container = document.querySelector("#container");
-
-// for(let i = 1; i<=5; i++){
-//     for(let j = 1; j<=4;j++){
-//         const column = document.createElement("div");
-//         if(i ==5 && j ==1){
-//             column.classList.add("square17");
-//         }else if(i ==5 && j ==2){
-//             continue;
-//         }else{
-//             column.className = "squares";
-//         }
-//         container.appendChild(column);
-//     }
-// }
-
 var num1 = '';
 var num2 = '';
 var operator = null;
 
 const displayElement = document.querySelector(".display>h1");
+const plusButton = document.querySelector(".plus");
+const minusButton = document.querySelector(".minus");
+const multiplyButton = document.querySelector(".multiply");
+const divideButton = document.querySelector(".divide");
 
 function updateValue(value){
     displayElement.innerHTML = value;
 }
 
 function display(value){
-    // if(value == "="){
-    //     operate(operator, num1, num2);
-    //     num1 = '';
-    //     num2 = '';
-    //     operator = null;
-    // }
-
-    // if(num1 == value){
-    //     displayElement.innerHTML+=num1;
-    // }else if(value == "+" || value == "-"){
-    //     operator = value;
-    //     console.log(operator);
-    // }else if(num1 != value){
-    //     if(operator!=null){
-    //         num2 = value;
-    //         console.log(num2);
-    //         displayElement.innerHTML = num2;
-    //     }else{
-    //         num1 = value;
-    //         displayElement.innerHTML = num1;
-    //         console.log(num1);
-    //     }
-    // }
 
     if(!isNaN(value) || value === "."){
         if(operator == null){
@@ -57,8 +22,16 @@ function display(value){
             num2+= value;
             updateValue(num2);
         }
-    }else if(value === "+"){
-        if(num1 != ''){
+    }else if(value === "+" || value === "-" || value === "*" || value === "/"){
+
+        if(num1  != '' && operator != null && num2 != ''){
+            const result = operate(operator, parseInt(num1), parseInt(num2));
+            updateValue(result);
+            num1 = result.toString();
+            num2 = '';
+            operator = value;
+        }
+        else if(num1 != ''){
             operator = value;
         }
     }else if(value === "="){
@@ -78,9 +51,53 @@ function display(value){
 }
 
 function operate(operator, num1, num2){
-    if(operator == "+"){
+    if(operator === "+"){
         return num1 + num2;
     }
+    else if(operator === "-"){
+        return num1 - num2;
+    }
+    else if(operator === "*"){
+        return num1 * num2;
+    }else if(operator === "/"){
+        return num1/num2;
+    }
+    
+}
+
+function plusButtonCss(){
+    plusButton.classList.add("button-pressed");
+    minusButton.classList.remove("button-pressed");
+    multiplyButton.classList.remove("button-pressed");
+    divideButton.classList.remove("button-pressed");
+}
+
+function minusButtonCss(){
+    plusButton.classList.remove("button-pressed");
+    minusButton.classList.add("button-pressed");
+    multiplyButton.classList.remove("button-pressed");
+    divideButton.classList.remove("button-pressed");
+}
+
+function multiplyButtonCss(){
+    plusButton.classList.remove("button-pressed");
+    minusButton.classList.remove("button-pressed");
+    multiplyButton.classList.add("button-pressed");
+    divideButton.classList.remove("button-pressed");
+}
+
+function divideButtonCss(){
+    plusButton.classList.remove("button-pressed");
+    minusButton.classList.remove("button-pressed");
+    multiplyButton.classList.remove("button-pressed");
+    divideButton.classList.add("button-pressed");
+}
+
+function normalButton(){
+    plusButton.classList.remove("button-pressed");
+    minusButton.classList.remove("button-pressed");
+    multiplyButton.classList.remove("button-pressed");
+    divideButton.classList.remove("button-pressed");
 }
 
 const add = function(num1, num2){
@@ -98,5 +115,25 @@ btn.forEach( button => {
     button.addEventListener("click", (event) => {
         const value = event.target.textContent;
         display(value);
+
+        if(value === plusButton.innerHTML){
+            button.classList.remove("button-pressed");
+            plusButtonCss();
+        }else if(value === minusButton.innerHTML){
+            button.classList.remove("button-pressed");
+            minusButtonCss(button);
+        }else if(value === multiplyButton.innerHTML){
+            button.classList.remove("button-pressed");
+            multiplyButtonCss(button);
+        }else if(value === divideButton.innerHTML){
+            button.classList.remove("button-pressed");
+            divideButtonCss(button);
+        }else{
+            button.classList.add("button-pressed");
+            normalButton(button);
+            setTimeout(() => {
+                button.classList.remove("button-pressed");
+            }, 75); 
+        }
     })
 });
